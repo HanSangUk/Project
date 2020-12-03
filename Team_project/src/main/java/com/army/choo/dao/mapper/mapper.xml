@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+ <mapper namespace="Member"> 
+ 	<!-- 기업회원가입 -->
+	<insert id="ComMemberInsert" parameterType="commember">
+		INSERT INTO COMMEMBER(COMNUMBER, COMPASSWORD, COMADDRESS1, COMADDRESS2, COMADDRESS3, COMADDRESS4, COMPHONE, COMPANY, COMOFFICE, CXADDRESS, CYADDRESS) 
+			VALUES(#{comnumber}, #{compassword}, #{comaddress1}, #{comaddress2}, #{comaddress3}, #{comaddress4}, #{comphone}, #{company}, #{comoffice}, #{cxaddress}, #{cyaddress})
+	</insert>
+	
+
+	<!-- 글 갯수가 몇개냐 -->
+	<select id="commembercount" resultType="int">
+		SELECT COUNT(COMNUMBER) FROM COMMEMBER
+	</select>
+	
+	<!--RN을 기준으로 시작행과 끝행 범위에 있는 글 가져오기  -->
+ 	<select id="commemberlist" parameterType="page" resultType="ggym">
+ 	SELECT * FROM (SELECT G.*,ROW_NUMBER() OVER(ORDER BY GGYMNUMBER DESC)
+ 		 AS RN FROM GGYM G WHERE GGYMID=#{mid}) WHERE RN BETWEEN #{startrow} AND #{endrow}
+ 	</select>
+	
+	<!-- 기업로그인 -->
+	<select id="ComLoginForm" parameterType="commember" resultType="String">
+		SELECT COMNUMBER FROM COMMEMBER WHERE COMNUMBER=#{comnumber} AND COMPASSWORD=#{compassword}
+	</select>
+	
+	<!-- 일반회원가입 -->
+	<insert id="memberInsert" parameterType="member">
+		INSERT INTO MEMBER(MID,MPASSWORD,MNAME,MADDRESS1,MADDRESS2,MADDRESS3,MADDRESS4,MPHONE,MEMAIL,MGENDER,MBIRTH,SETAUTHSTATUS, MXADDRESS, MYADDRESS)
+			VALUES(#{mid},#{mpassword},#{mname},#{maddress1},#{maddress2},#{maddress3},#{maddress4},#{mphone},#{memail},#{mgender},#{mbirth},0,#{mxaddress},#{myaddress})
+	</insert>
+	
+	<!-- 일반회원 아이디 중복체크 -->
+	<select id="idOverlap" parameterType="String" resultType="String">
+		SELECT MID FROM MEMBER WHERE MID=#{mid}
+	</select>
+	
+	<!-- 일반회원 로그인 -->
+	<select id="memberLogin" parameterType="member" resultType="int">
+		SELECT SETAUTHSTATUS FROM MEMBER WHERE MID=#{mid} AND MPASSWORD=#{mpassword}
+	</select>
+	
+ 	
+ 	<!-- 기업회원정보수정페이지 이동 -->
+	<select id="ComMemberUpdate" parameterType="String" resultType="commember">
+		SELECT * FROM COMMEMBER WHERE COMNUMBER=#{comnumber}
+	</select>
+	
+	<!-- 기업회원정보수정 -->
+	<update id="ComMemberUpdateForm" parameterType="commember">
+		UPDATE COMMEMBER SET COMPASSWORD=#{compassword}, COMPHONE=#{comphone}, COMOFFICE=#{comoffice}, COMADDRESS1=#{comaddress1}, COMADDRESS2=#{comaddress2}, COMADDRESS3=#{comaddress3}, COMADDRESS4=#{comaddress4} WHERE COMNUMBER=#{comnumber}
+	</update>
+	
+	<!-- 기업회원탈퇴 -->
+	<delete id="ComMemberDeleteForm" parameterType="commember">
+		DELETE FROM COMMEMBER WHERE COMNUMBER=#{comnumber} AND COMPASSWORD=#{compassword}
+	</delete>
+	
+	<!-- 기업마이페이지 -->
+	<select id="ComMyPage" parameterType="String" resultType="commember">
+		SELECT * FROM COMMEMBER WHERE COMNUMBER=#{comnumber}
+	</select>
+ 
+ 	<!-- 일반회원마이페이지 -->
+	<select id="myPage" parameterType="String" resultType="member">
+ 	   SELECT * FROM MEMBER WHERE MID=#{mid}
+	</select>
+	<!-- 일반회원 수정창 -->
+	<select id="memberUpdate" parameterType="member" resultType="member">
+	    SELECT * FROM MEMBER WHERE MID=#{mid}
+	</select>
+	<!-- 일반회원 수정처리 -->
+	<update id="memberUpdateProcess" parameterType="member">
+	    UPDATE MEMBER SET MID = #{mid}, MPASSWORD = #{mpassword}, MNAME = #{mname}, MADDRESS1 = #{maddress1}, MADDRESS2 = #{maddress2}, MADDRESS3 = #{maddress3}, MADDRESS4 = #{maddress4}, MPHONE = #{mphone}, MEMAIL = #{memail}, MGENDER = #{mgender}, MBIRTH = #{mbirth} WHERE MID = #{mid} 
+	</update>
+	<!-- 일반회원 탈퇴 -->
+	<delete id="memberOut" parameterType="String">
+  	  DELETE FROM MEMBER WHERE MID = #{mid}
+	</delete>
+	<!-- 지점리스트 -->
+	<select id = "officeList" parameterType = "String" resultType = "commember">
+		SELECT * FROM COMMEMBER WHERE COMPANY = #{company}
+	</select>
+	<!-- 이메일인증1 -->
+	<update id = "GetKey" parameterType = "member">
+		UPDATE MEMBER SET MKEY = #{mkey} WHERE MID = #{mid}
+	</update>
+	<!-- 이메일인증2 -->
+	<update id="alrer_userKey" parameterType = "member">
+		UPDATE MEMBER SET SETAUTHSTATUS = 1 WHERE MID = #{mid} AND MKEY = #{mkey}
+	</update>
+	<!-- 지점수(검색용) -->
+	<select id="officeCount" parameterType="String" resultType="int">
+		SELECT COUNT(COMOFFICE) FROM COMMEMBER WHERE COMOFFICE LIKE '%'||#{searchInput}||'%'
+	</select>
+	<!-- 지점검색(메인) -->
+	<select id="officepaging" parameterType="page" resultType="commember">
+		SELECT * FROM (SELECT C.*, ROW_NUMBER() OVER(ORDER BY COMNUMBER DESC) AS RN FROM COMMEMBER C WHERE COMOFFICE LIKE '%'||#{search}||'%') WHERE RN BETWEEN #{startrow} AND #{endrow}
+	</select>
+	<!-- 카카오페이 회원정보 셀렉 -->
+	<select id = "memberdetailService" parameterType = "String" resultType = "member">
+		SELECT MGENDER,MBIRTH FROM MEMBER WHERE MID = #{partner_user_id}
+	</select>
+	<!-- 카카오페이 -->
+	<select id = "productService" parameterType = "int" resultType = "String">
+		SELECT Comnumber FROM COMMEMBER C, PRODUCT P WHERE P.PCNUMBER = C.COMNUMBER AND P.PNUMBER = #{pnumber}
+	</select>
+	<!-- 지점리스트 -->
+	<select id="officeLists" parameterType="page" resultType="commember">
+		SELECT * FROM (SELECT C.*, ROW_NUMBER() OVER(ORDER BY COMNUMBER DESC) AS RN FROM COMMEMBER C WHERE COMPANY = #{company}) WHERE RN BETWEEN #{startrow} AND #{endrow}
+	</select>
+	<!-- 찜리스트  카운트 -->
+	<select id="ggymlist" parameterType="String" resultType="int">
+		SELECT COUNT(ggymid) FROM ggym where ggymid = #{mid}
+	</select>
+	<!-- 찜리스트에 저장할 값 -->
+	<select id="comdata" parameterType="String" resultType="commember">
+		SELECT * FROM COMMEMBER WHERE COMNUMBER=#{comnumber}
+	</select>
+	
+	<!-- 카카오아이디로 회원가입 -->
+	<insert id="kakaoMemberJoin" parameterType="member">
+		INSERT INTO MEMBER (MID, MPASSWORD, MNAME, MBIRTH, MEMAIL, MPHONE, MADDRESS1, MADDRESS2, MADDRESS3, MADDRESS4, KAKAOID) 
+			VALUES(#{mid}, #{mpassword}, #{mname}, #{mbirth}, #{memail}, #{mphone}, #{maddress1}, #{maddress2}, #{maddress3}, #{maddress4}, #{kakaoId})
+	</insert>
+	<!-- 네이버아이디로 회원가입 -->
+	<insert id="naverMemberJoin" parameterType="member">
+		INSERT INTO MEMBER (MID, MPASSWORD, MNAME, MBIRTH, MEMAIL, MPHONE, MADDRESS1, MADDRESS2, MADDRESS3, MADDRESS4, NAVERID) 
+			VALUES(#{mid}, #{mpassword}, #{mname}, #{mbirth}, #{memail}, #{mphone}, #{maddress1}, #{maddress2}, #{maddress3}, #{maddress4}, #{naverId})
+	</insert>
+	
+	<select id="kakaoLogin" parameterType="String" resultType="String">
+		SELECT MID FROM member WHERE KAKAOID=#{kakaoId}
+	</select>
+
+	<select id="naverLogin" parameterType="String" resultType="String">
+		SELECT MID FROM member WHERE NAVERID=#{naverId}
+	</select>
+	
+	<!-- 구매목록 -->
+    <select id="payList" parameterType="page" resultType="pay">
+      SELECT * FROM (SELECT P.*, ROW_NUMBER() OVER(ORDER BY PAYNUMBER DESC) AS RN FROM PAYMENT P WHERE PAYID=#{mid}) WHERE RN BETWEEN #{startrow} AND #{endrow}
+    </select>
+    <!-- 구매목록 페이징 -->
+    <select id="payCount" parameterType="String" resultType="int">
+    	SELECT COUNT(PAYNUMBER) FROM PAYMENT WHERE PAYID=#{payid}
+    </select>
+    
+    <select id="alarmCount" parameterType="String" resultType="int">
+    	SELECT COUNT(AMID) FROM ALARM WHERE CONFIRM=0
+    </select>
+    <select id="alarmList" parameterType="String" resultType="alarm">
+    	SELECT * FROM ALARM WHERE AMID=#{amid} ORDER BY ANUMBER DESC
+    </select>
+    <select id="commemberpayList" parameterType="page" resultType="pay">
+    	SELECT * FROM (SELECT P.*, ROW_NUMBER() OVER(ORDER BY PAYNUMBER DESC) AS RN FROM PAYMENT P WHERE PAYOFFICE=#{company}) WHERE RN BETWEEN #{startrow} AND #{endrow}
+    </select>
+    <!--  -->
+    <select id="listCount" parameterType="String" resultType="int">
+    	SELECT COUNT(PAYNUMBER) FROM PAYMENT WHERE PAYOFFICE=#{comnumber}
+    </select>
+    
+     <select id = "comoffice" parameterType="String" resultType = "commember">
+     select * from commember where comnumber = #{loginId}
+    </select>
+    
+    <update id="alarmConfirm">
+    	UPDATE ALARM SET CONFIRM = 1 WHERE CONFIRM = 0
+    </update>
+</mapper>
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 

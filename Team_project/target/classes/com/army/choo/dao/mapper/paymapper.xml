@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+ <mapper namespace="Pay"> 
+
+	<!--결제 데이터 삽입  -->
+   <insert id="payInsert" parameterType="KakaoPayApprovalVO">
+      INSERT INTO PAYMENT(PAYNUMBER,PAYPRODUCT,PAYID,PAYOFFICE,PAYNAME,PAYGENDER,PAYAGE,PAYDATE,PAYAMOUNT,PAYQUANTITY,PAYCATEGORY,PAYAGREE,REVIEWAGREE)
+         VALUES(PAY_SEQUENCE.NEXTVAL,#{pcode,jdbcType=NUMERIC},#{partner_user_id,jdbcType=VARCHAR},
+            #{payoffice,jdbcType=VARCHAR},#{item_name,jdbcType=VARCHAR},#{paygender,jdbcType=VARCHAR},
+               #{payage,jdbcType=VARCHAR},SYSDATE,#{total_amount,jdbcType=NUMERIC},#{quantity,jdbcType=NUMERIC},#{paycategory,jdbcType=VARCHAR},'상품준비중','0')
+   </insert>
+   
+   <insert id = "payInsert2" parameterType = "KakaoPayApprovalVO">
+         INSERT INTO PAYMENT(PAYNUMBER,PAYPRODUCT,PAYID,PAYOFFICE,PAYNAME,PAYGENDER,PAYAGE,PAYDATE,PAYAMOUNT,PAYQUANTITY,PAYCATEGORY,PAYAGREE,REVIEWAGREE)
+         VALUES(PAY_SEQUENCE.NEXTVAL,#{pcode,jdbcType=NUMERIC},#{partner_user_id,jdbcType=VARCHAR},
+            #{payoffice,jdbcType=VARCHAR},#{item_name,jdbcType=VARCHAR},#{paygender,jdbcType=VARCHAR},
+               #{payage,jdbcType=VARCHAR},SYSDATE,#{total_amount,jdbcType=NUMERIC},#{quantity,jdbcType=NUMERIC},#{paycategory,jdbcType=VARCHAR},'상품준비중','0')
+   </insert>
+   <delete id = "payDelete" parameterType = "int">
+   	 	DELETE FROM BASKET WHERE BANUMBER = #{banumber} 
+   </delete>
+   
+   <select id = "payListSelect" parameterType = "String" resultType = "pay">
+   		select * from payment where payid=#{payid} order by paynumber desc
+   </select>
+   
+   
+   <select id="payProduct" resultType="pay">
+   		select payproduct from payment group by payproduct order by count(payproduct) desc
+   </select>
+   
+<!--      <select id="selectAlgorism" parameterType = "String" resultType="product">
+   		select * from recommend where userid= #{userid}
+   </select> -->
+   <select id = "monthtotal" parameterType = "String" resultType = "Integer">
+   		select sum(payamount) as amount from payment
+			where to_char(paydate, 'yyyy')='2020' and payoffice = #{loginId}
+				group by to_char(paydate, 'yyyy-mm')
+				order by to_char(paydate, 'yyyy-mm')
+   </select>
+   
+<!--      <select id="selectAlgorism" parameterType = "String" resultType="product">
+   		select * from recommend where userid= #{userid}
+   </select> -->
+   
+ 	<select id = "month1" parameterType ="String" resultType = "int">
+   		select sum(payamount) from payment where payoffice = #{loginId} and paydate between ('20/01/01') and ('20/01/31')
+   </select>
+  
+  <select id = "month2" parameterType ="String" resultType = "int">
+   		select sum(payamount) from payment where payoffice = #{loginId} and paydate between ('20/02/01') and ('20/02/29')
+   </select> 
+   
+   <select id = "month3" parameterType ="String" resultType = "int">
+   		select sum(payamount) from payment where payoffice = #{loginId} and paydate between ('20/03/01') and ('20/03/31')
+   </select> 
+   
+   <select id = "month4" parameterType ="String" resultType = "int">
+   		select sum(payamount) from payment where payoffice = #{loginId} and paydate between ('20/04/01') and ('20/04/30')
+   </select> 
+   
+   <select id = "month5" parameterType ="String" resultType = "int">
+   		select sum(payamount) from payment where payoffice = #{loginId} and paydate between ('20/05/01') and ('20/05/31')
+   </select>
+   
+   <select id = "month6" parameterType ="String" resultType = "int">
+   		select sum(payamount) from payment where payoffice = #{loginId} and paydate between ('20/06/01') and ('20/06/30')
+   </select> 
+    
+   <select id = "month7" parameterType ="String" resultType = "int">
+   		select sum(payamount) from payment where payoffice = #{loginId} and paydate between ('20/07/01') and ('20/07/31')
+   </select>  
+   
+   <select id = "month8" parameterType ="String" resultType = "int">
+   		select sum(payamount) from payment where payoffice = #{loginId} and paydate between ('20/08/01') and ('20/08/31')
+   </select>
+   
+   <select id = "month9" parameterType ="String" resultType = "int">
+   		select sum(payamount) from payment where payoffice = #{loginId} and paydate between ('20/09/01') and ('20/09/30')
+   </select>  
+   
+   <select id = "month10" parameterType ="String" resultType = "int">
+   		select sum(payamount) from payment where payoffice = #{loginId} and paydate between ('20/10/01') and ('20/10/31')
+   </select> 
+   
+   <select id = "month11" parameterType ="String" resultType = "int">
+   		select sum(payamount) from payment where payoffice = #{loginId} and paydate between ('20/11/01') and ('20/11/30')
+   </select> 
+   
+   <select id = "month12" parameterType ="String" resultType = "int">
+   		select sum(payamount) from payment where payoffice = #{loginId} and paydate between ('20/12/01') and ('20/12/31')
+   </select> 
+   
+   <select id = "categorynum1" parameterType = "String" resultType = "int">
+   		select count(paycategory) from payment where payoffice = #{loginId} and paycategory = 'Snack' group by paycategory
+   </select>
+   <select id = "categorynum2" parameterType = "String" resultType = "int">
+   		select count(paycategory) from payment where payoffice = #{loginId} and paycategory = 'Drink' group by paycategory
+   </select>
+   <select id = "categorynum3" parameterType = "String" resultType = "int">
+   		select count(paycategory) from payment where payoffice = #{loginId} and paycategory = 'Icecream' group by paycategory
+   </select>
+   <select id = "categorynum4" parameterType = "String" resultType = "int">
+   		select count(paycategory) from payment where payoffice = #{loginId} and paycategory = 'Noodle' group by paycategory
+   </select>
+   <select id = "categorynum5" parameterType = "String" resultType = "int">
+   		select count(paycategory) from payment where payoffice = #{loginId} and paycategory = 'Food' group by paycategory
+   </select>
+   <insert id = "alarmInsert" parameterType="KakaoPayApprovalVO">
+   		insert into alarm values(ALARM_SEQ.NEXTVAL,#{partner_user_id},#{payoffice},#{item_name},'상품 준비중입니다.',SYSDATE)
+   </insert>
+ </mapper>
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 

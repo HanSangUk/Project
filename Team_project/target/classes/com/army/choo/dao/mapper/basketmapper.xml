@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+ <mapper namespace="Basket"> 
+ 	<insert id = "BasketInsert" parameterType = "basket">
+ 		INSERT INTO BASKET(BANUMBER, PNUMBER, BANAME, BAIMG,BAID,BATOTAL,BACOUNT, bacategory)
+ 		 VALUES(BASKET_SEQUENCE.NEXTVAL, #{pnumber}, #{baname}, #{baimg}, #{baid}, #{batotal}, #{bacount}, #{bacategory})
+ 	</insert>
+ 	
+ 	<!-- 장바구니 리스트 -->
+	<select id="BasketList" parameterType="String" resultType="basket">
+		SELECT * FROM BASKET WHERE BAID=#{baid}
+	</select>
+	
+	<delete id="deleteCart" parameterType="basket">
+		DELETE FROM BASKET WHERE BANUMBER=#{banumber}
+	</delete>
+	
+	<select id="BasketAjaxList" parameterType="String" resultType="basket">
+		SELECT * FROM BASKET WHERE BAID=#{baid}
+	</select>
+	
+	<select id = "categorySelect" parameterType = "int" resultType = "String">
+		select bacategory FROM BASKET WHERE BANUMBER = #{banumber}
+	</select>
+	
+	<select id = "banameSelect" parameterType = "int" resultType = "String">
+		SELECT BANAME FROM BASKET WHERE BANUMBER = #{banumber}
+	</select>
+ </mapper>
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 

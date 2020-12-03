@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	
+	<typeAliases>
+		<typeAlias alias="notice" type="com.army.choo.dto.NoticeDTO"></typeAlias>
+		<typeAlias alias="ggym" type="com.army.choo.dto.GgymDTO"></typeAlias>
+		<typeAlias alias="page" type="com.army.choo.dto.PageDTO"></typeAlias>
+		<typeAlias alias="commember" type="com.army.choo.dto.ComMemberDTO"></typeAlias>
+		<typeAlias alias="member" type="com.army.choo.dto.MemberDTO"></typeAlias>
+		<typeAlias alias="product" type="com.army.choo.dto.ProductDTO"></typeAlias>
+		<typeAlias alias="KakaoPayApprovalVO" type="com.army.choo.dto.KakaoPayApprovalVO"></typeAlias>
+		<typeAlias alias="basket" type="com.army.choo.dto.BasketDTO"></typeAlias>
+		<typeAlias alias="pay" type="com.army.choo.dto.PayDTO"></typeAlias>
+		<typeAlias alias="review" type="com.army.choo.dto.ReviewDTO"></typeAlias>
+		<typeAlias alias="alarm" type="com.army.choo.dto.AlarmDTO"></typeAlias>
+	</typeAliases>
+	
+</configuration>
+
+

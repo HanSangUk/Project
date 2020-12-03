@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ <!-- 여기서 parameterType은 ?에 사용할 파라미터를 가져오는 것이고 
+ 			resultType은 select할때 무슨 타입을 검색할 것인지 찾는거  ex) select ? <<이부분의 타입을 말함 -->
+ <mapper namespace="Product"> 
+ 	<select id = "memberlogin" parameterType = "member" resultType="String">
+ 		SELECT COMNUMBER FROM COM_MEMBER WHERE COMNUMBER=#{mid} AND MPASSWORD =#{mpassword}
+ 	</select>
+ 	<insert id="productInsert" parameterType = "product">
+ 		INSERT INTO PRODUCT (PNUMBER, PNAME, PPRICE, PINFO, PCATEGORY, PCNUMBER, PCOUNT, PIMAGE, PDATE)
+ 		 VALUES(SEQ_PNUMBER.NEXTVAL, #{pname}, #{pprice}, #{pinfo}, #{pcategory}, #{pcnumber,jdbcType=VARCHAR}, #{pcount}, #{pimage}, SYSDATE)
+ 	</insert>
+ 	<select id ="productSelect" parameterType = "String" resultType = "product">
+ 		select * from product where pcnumber = #{loginId}
+ 	</select>
+ 	<select id = "productDetailSelect" parameterType = "int" resultType = "product">
+ 		select * from product where pnumber = #{pnumber}
+ 	</select>
+ 	<update id = "productUpdateProcess" parameterType = "product">
+ 		update product set pcategory = #{pcategory}, pname = #{pname}, pprice = #{pprice}, pcount = #{pcount}, pimage = #{pimage}, pinfo = #{pinfo}
+ 		 where pnumber = #{pnumber}
+ 	</update>
+ 	<delete id = "productDelete" parameterType = "int">
+ 		DELETE FROM product WHERE PNUMBER = #{pnumber}
+ 	</delete>
+ 	<select id = "productList" parameterType = "String" resultType = "product">
+ 		SELECT * FROM PRODUCT WHERE PCNUMBER = #{comnumber} 
+ 	</select>
+ 	<select id = "productList2" parameterType = "product" resultType = "product">
+ 		SELECT * FROM PRODUCT WHERE PCNUMBER = #{pcnumber} AND PCATEGORY = #{pcategory}
+ 	</select>
+ 	
+ 	<select id = "productView" parameterType = "int" resultType = "product">
+ 		SELECT * FROM PRODUCT WHERE PNUMBER = #{pnumber}	
+ 	</select>
+ 	
+ 	<!-- 물품검색 카운트 -->
+ 	<select id="listcount" parameterType="String" resultType="int">
+ 		SELECT COUNT(PNUMBER) FROM PRODUCT WHERE PNAME LIKE '%'||#{searchInput}||'%'
+ 	</select>
+ 	<!-- 물픔리스트페이징 -->
+ 	<select id="productpaging" parameterType="page" resultType="product">
+ 		SELECT * FROM (SELECT P.*, ROW_NUMBER() OVER(ORDER BY PNUMBER DESC) AS RN FROM PRODUCT P WHERE PNAME LIKE '%'||#{search}||'%') WHERE RN BETWEEN #{startrow} AND #{endrow}
+ 	</select>
+ 	<!-- 지점상세보기(물품리스트) -->
+ 	<select id="officeMangeMent" parameterType="String" resultType="product">
+ 		SELECT * FROM PRODUCT WHERE PCNUMBER=#{pcnumber}
+ 	</select>
+ 	
+ 	<select id="commainListCount" parameterType="String" resultType="int">
+ 		SELECT COUNT(PNUMBER) FROM PRODUCT WHERE PCNUMBER=#{loginId}
+ 	</select>
+ 	
+ 	<select id="selectproduct" resultType="product">
+ 		select * from product WHERE ROWNUM <![CDATA[<]]> 5 order by pnumber desc
+ 	</select>
+ 	
+ 	<select id="bestproduct" parameterType="int" resultType="product">
+ 		select * from product where pnumber=#{pnumber}
+ 	</select>
+ 	
+ 	<!-- 리뷰작성 -->
+    <insert id="productReview" parameterType="review">
+       INSERT INTO REVIEW(RNUMBER,RID,RCONTENTS,RDATE,PNUMBER,PAYNUMBER) VALUES(RNUMBER_SEQ.NEXTVAL,#{rid},#{rcontents},SYSDATE,#{pnumber},#{paynumber})
+    </insert>
+   <!-- 리뷰 리스트 -->
+    <select id="reviewList" parameterType="page" resultType="review">
+		SELECT * FROM (SELECT R.*, ROW_NUMBER() OVER(ORDER BY PNUMBER DESC) AS RN FROM REVIEW R WHERE PNUMBER=#{pnumber}) WHERE RN BETWEEN #{startrow} AND #{endrow}
+    </select>
+    <!-- 배송완료 -->
+    <update id="productAgree" parameterType="int">
+       UPDATE PAYMENT SET PAYAGREE = '배송완료'  WHERE PAYNUMBER = #{paynumber}
+    </update>
+    <!-- 리뷰 페이징 카운트 -->
+    <select id="reviewListCount" parameterType="int" resultType="int">
+		SELECT COUNT(PNUMBER) FROM REVIEW WHERE PNUMBER=#{pnumber}   
+    </select>
+    
+    <select id = "selectquantity" parameterType = "String" resultType = "int">
+ 		SELECT PCOUNT FROM PRODUCT WHERE PNUMBER = #{item_code}
+ 	</select>
+ 	
+ 	<!-- 상품갯수 마이너스 -->
+ 	<update id = "updatequantity" parameterType = "KakaoPayApprovalVO">
+ 		UPDATE PRODUCT SET PCOUNT = PCOUNT-#{quantity} WHERE PNUMBER = #{item_code}
+ 	</update>
+ 	
+ 	<!-- 해당상품 카테고리 -->
+ 	<select id="categorySelect2" parameterType = "int" resultType = "String">
+ 		SELECT PCATEGORY FROM PRODUCT WHERE pnumber = #{value}
+ 	</select>
+ 	
+ 	<!-- 장바구니구매하면 갯수 마이너스 -->
+ 	<update id="productupdate" parameterType = "KakaoPayApprovalVO">
+ 		UPDATE PRODUCT SET PCOUNT = PCOUNT-#{updatequantity} WHERE PNUMBER = #{pcode}
+ 	</update>
+ 	
+ 	<!-- 리뷰작성여부 -->
+ 	<update id="reviewAgree" parameterType = "review">
+ 		UPDATE PAYMENT SET REVIEWAGREE = 1 WHERE PAYNUMBER = #{paynumber}
+ 	</update>
+ 	
+ 	<update id="cproductAgree" parameterType = "pay">
+       UPDATE PAYMENT SET PAYAGREE = #{payagree}  WHERE PAYNUMBER = #{paynumber}
+    </update>
+    
+    <insert id = "alarm2" parameterType="pay">
+   		insert into alarm values(ALARM_SEQ.NEXTVAL,#{payid},#{payoffice},#{payname},'배송 준비중입니다.',SYSDATE,0)
+   </insert>
+   <insert id = "alarm3" parameterType="pay">
+   		insert into alarm values(ALARM_SEQ.NEXTVAL,#{payid},#{payoffice},#{payname},'배송이 시작되었습니다.',SYSDATE,0)
+   </insert>
+</mapper>
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+ <mapper namespace="Ggym"> 
+ 
+	<delete id="ggymdelete" parameterType="int">
+		DELETE FROM GGYM WHERE GGYMNUMBER =#{ggymnumber}
+	</delete>
+	
+	<insert id="ggyminsert" parameterType="java.util.HashMap">
+		INSERT INTO GGYM(GGYMNUMBER,GGYMOFFICE,GGYMID)
+			VALUES(GGYM_SEQ.NEXTVAL,#{comnumber},#{mid})
+	</insert>
+	
+	<select id="ggymcheckselect" parameterType="java.util.HashMap" resultType="int">
+		SELECT COUNT(GGYMNUMBER) FROM GGYM WHERE GGYMID =#{mid} AND GGYMOFFICE=#{comnumber}
+	</select>
+	
+	<select id="ggymselect" parameterType="java.util.HashMap" resultType="int">
+		SELECT GGYMNUMBER FROM GGYM WHERE GGYMID =#{mid} AND GGYMOFFICE=#{comnumber}
+	</select>
+	
+	
+ </mapper>
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
