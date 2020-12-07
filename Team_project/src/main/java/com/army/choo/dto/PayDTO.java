@@ -20,4 +20,6 @@ public class PayDTO {
      private String paymentagree;
      private String payagree;
      private int reviewagree;
+     private int times;
+     private int hour;
 }

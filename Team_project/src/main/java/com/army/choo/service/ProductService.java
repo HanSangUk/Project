@@ -17,6 +17,7 @@ import com.army.choo.dao.MemberDAO;
 import com.army.choo.dao.PayDAO;
 import com.army.choo.dao.ProductDAO;
 import com.army.choo.dto.ComMemberDTO;
+import com.army.choo.dto.MemberDTO;
 import com.army.choo.dto.PageDTO;
 import com.army.choo.dto.PayDTO;
 import com.army.choo.dto.ProductDTO;
@@ -326,13 +327,26 @@ public class ProductService {
 	   
 	   public ModelAndView cproductAgree(PayDTO paydto) {
 			  mav= new ModelAndView();
+			  double mx = 0;
+			  double my = 0;
+			  double cx = 0;
+			  double cy = 0;
+			  int paynumber = paydto.getPaynumber();
+			  String mid = paydto.getPayid();
+			  String comnumber = paydto.getPayoffice();
 			  productDAO.cproductAgree(paydto);
 			  if(paydto.getPayagree().equals("배송준비중")) {
 				  productDAO.alarm2(paydto);
 			  }else {
+				  MemberDTO mDTO = memberDAO.memberCoordinates(mid);
+				  ComMemberDTO comDTO = memberDAO.comCoordinates(comnumber);
+				  mx = mDTO.getMxaddress();
+				  my = mDTO.getMyaddress();
+				  cx = comDTO.getCxaddress();
+				  cy = comDTO.getCyaddress();
 				  productDAO.alarm3(paydto);
 			  }
-			  mav.setViewName("redirect:/commemberpaylist");
+			  mav.setViewName("redirect:/kakaomap?mx="+mx+"&my="+my+"&cx="+cx+"&cy="+cy+"&paynumber="+paynumber);
 			  return mav;
 		   }
 

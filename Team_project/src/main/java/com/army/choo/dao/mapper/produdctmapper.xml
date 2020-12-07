@@ -106,10 +106,10 @@
     </update>
     
     <insert id = "alarm2" parameterType="pay">
-   		insert into alarm values(ALARM_SEQ.NEXTVAL,#{payid},#{payoffice},#{payname},'배송 준비중입니다.',SYSDATE,0)
+   		insert into alarm values(ALARM_SEQ.NEXTVAL,#{payid},#{payoffice},#{payname},'배송 준비중입니다.',SYSDATE,0,0,0,#{paynumber})
    </insert>
    <insert id = "alarm3" parameterType="pay">
-   		insert into alarm values(ALARM_SEQ.NEXTVAL,#{payid},#{payoffice},#{payname},'배송이 시작되었습니다.',SYSDATE,0)
+   		insert into alarm values(ALARM_SEQ.NEXTVAL,#{payid},#{payoffice},#{payname},'배송이 시작되었습니다.',SYSDATE,0,0,0,#{paynumber})
    </insert>
 </mapper>
  

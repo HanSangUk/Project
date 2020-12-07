@@ -24,5 +24,6 @@ public class PageDTO {
 	private int startrow1;
 	private int endrow1;
 	private int pnumber;
+	private String amid;
 	
 }

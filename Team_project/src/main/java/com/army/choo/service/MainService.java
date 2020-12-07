@@ -7,9 +7,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.army.choo.dao.MemberDAO;
+import com.army.choo.dao.PayDAO;
 import com.army.choo.dao.ProductDAO;
+import com.army.choo.dto.AlarmDTO;
 import com.army.choo.dto.ComMemberDTO;
 import com.army.choo.dto.PageDTO;
+import com.army.choo.dto.PayDTO;
 import com.army.choo.dto.ProductDTO;
 
 
@@ -21,6 +24,9 @@ public class MainService {
 	
 	@Autowired
 	private ProductDAO pDAO;
+	
+	@Autowired
+	private PayDAO paydao;
 	
 	private ModelAndView mav;
 	
@@ -165,6 +171,17 @@ public class MainService {
 		mav.setViewName("productv/OfficeManagement");
 		return mav;
 	}
-	
-	
+
+
+	public void Distance(PayDTO pDTO) {
+		mav = new ModelAndView();
+		paydao.distance(pDTO);
+	}
+
+
+	public void alarm(AlarmDTO aDTO) {
+		mav = new ModelAndView();
+		paydao.alarmupdate(aDTO);
+	}
+
 }

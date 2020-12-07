@@ -30,6 +30,7 @@
 	}
 	.paging{
 		text-align:center;
+		font-size:20px;
 	}
 	.totarl{
 		width:100%;

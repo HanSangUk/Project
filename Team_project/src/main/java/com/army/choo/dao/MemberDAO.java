@@ -151,8 +151,8 @@ public class MemberDAO {
 			return sql.selectOne("Member.alarmCount",amid);
 		}
 
-		public List<AlarmDTO> alarmList(String amid) {
-			return sql.selectList("Member.alarmList",amid);
+		public List<AlarmDTO> alarmList(PageDTO paging) {
+			return sql.selectList("Member.alarmList", paging);
 		}
 
 		public List<PayDTO> commemberpayList(PageDTO pdto) {
@@ -168,5 +168,17 @@ public class MemberDAO {
 	      }
 		public void alarmConfirm() {
 			sql.update("Member.alarmConfirm");
+		}
+
+		public MemberDTO memberCoordinates(String mid) {
+			return sql.selectOne("Member.memberCoordinates",mid);
+		}
+
+		public ComMemberDTO comCoordinates(String comnumber) {
+			return sql.selectOne("Member.comCoordinates", comnumber);
+		}
+
+		public int alarmlistCount(String amid) {
+			return sql.selectOne("Member.alarmlistCount", amid);
 		}
 }

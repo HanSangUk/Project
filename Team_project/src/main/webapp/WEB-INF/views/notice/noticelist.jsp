@@ -49,6 +49,7 @@ function noticedelete(nnumber){
 </head>
 <body>
 <jsp:include page="../homeInclude.jsp" flush="false"/>
+<br><br>
 <p class="title"><i class="fas fa-bullhorn"></i> 공지사항 <i class="fas fa-bullhorn fa-flip-horizontal"></i></p><br>
 <div class="tables">
 		<table border="1">

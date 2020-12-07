@@ -112,6 +112,7 @@ public class ProductController {
        paydto.setPayagree(payagree);
        paydto.setPaynumber(paynumber);
        System.out.println("@@@@@@"+paydto.toString());
+       System.out.println("ang");
        mav = productService.cproductAgree(paydto);
        return mav;
     }

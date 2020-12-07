@@ -108,9 +108,18 @@
    <select id = "categorynum5" parameterType = "String" resultType = "int">
    		select count(paycategory) from payment where payoffice = #{loginId} and paycategory = 'Food' group by paycategory
    </select>
-   <insert id = "alarmInsert" parameterType="KakaoPayApprovalVO">
-   		insert into alarm values(ALARM_SEQ.NEXTVAL,#{partner_user_id},#{payoffice},#{item_name},'상품 준비중입니다.',SYSDATE)
+  <insert id = "alarmInsert" parameterType="KakaoPayApprovalVO">
+   		insert into alarm values(ALARM_SEQ.NEXTVAL,#{partner_user_id},#{payoffice},#{item_name},'상품 준비중입니다.',SYSDATE,0,0,0,0)
    </insert>
+   
+   <update id="alarmUpdate" parameterType="alarm">
+   		UPDATE ALARM SET TIMES=#{times}, HOUR=#{hour} WHERE PAYNUMBER=#{paynumber}
+   </update>
+   
+   <update id="Distance" parameterType="pay">
+   		UPDATE PAYMENT SET TIMES=#{times}, HOUR=#{hour} WHERE PAYNUMBER=#{paynumber}
+   </update>
+   
  </mapper>
  
  

@@ -358,12 +358,15 @@ public class MemberController {
 		public String alarmGo() {
 			return "alarm";
 		}
+		//알람 리스트
 		@RequestMapping(value = "/alarmlist")
-		public ModelAndView alarmList() {
+		public ModelAndView alarmList(@RequestParam(value="page",
+				required=false, defaultValue="1") int page) {
 			String amid = (String) session.getAttribute("loginId");
-			mav = ms.alarmList(amid);
+			mav = ms.alarmList(amid, page);
 			return mav;
 		}
+		
 		@RequestMapping(value = "/commemberpaylist")
 		public ModelAndView commemberpayList(@RequestParam(value="page",
 				required=false, defaultValue="1") int page) {

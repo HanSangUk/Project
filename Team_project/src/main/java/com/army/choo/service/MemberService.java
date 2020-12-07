@@ -21,6 +21,7 @@ import com.army.choo.dto.GgymDTO;
 import com.army.choo.dto.MemberDTO;
 import com.army.choo.dto.PageDTO;
 import com.army.choo.dto.PayDTO;
+import com.army.choo.dto.ProductDTO;
 import com.fasterxml.jackson.databind.JsonNode;
 
 
@@ -295,10 +296,30 @@ public class MemberService {
 				return alarmCount;
 			}
 
-	      public ModelAndView alarmList(String amid) {
+	      public ModelAndView alarmList(String amid, int page) {
 				mav = new ModelAndView();
-				List<AlarmDTO> alarmList = mDAO.alarmList(amid);
+				int listCount = mDAO.alarmlistCount(amid);
+				int startRow = (page-1)*PAGE_LIMIT+1; // 1 4 7 10 13 ......
+				int endRow = page*PAGE_LIMIT; // 3 6 9 12 ....
+				PageDTO paging = new PageDTO();
+				paging.setStartrow(startRow);
+				paging.setEndrow(endRow);
+				paging.setAmid(amid);
+				List<AlarmDTO> alarmList = mDAO.alarmList(paging);
+				int maxPage = (int)(Math.ceil((double)listCount/PAGE_LIMIT));
+				int startPage = (((int)(Math.ceil((double)page/BLOCK_LIMIT))) -1) * BLOCK_LIMIT +1;
+				                     // Math.ceil = 그냥 반올림
+				int endPage = startPage + BLOCK_LIMIT - 1;
+				if(endPage>maxPage) {
+					endPage = maxPage;
+				}
+						
+				paging.setPage(page);
+				paging.setStartpage(startPage);
+				paging.setEndpage(endPage);
+				paging.setMaxpage(maxPage);
 				mDAO.alarmConfirm();
+				mav.addObject("paging", paging);
 				mav.addObject("alarmList",alarmList);
 				mav.setViewName("alarmList");
 				return mav;

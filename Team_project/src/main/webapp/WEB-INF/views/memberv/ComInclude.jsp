@@ -16,8 +16,9 @@
         <a class="navbar-brand" href="commaingo">SSadaing</a>
         <div class="com-log">
 			<span class="com-member">${sessionScope.loginId} 님</span><br>
-			<a href="comlogout" class="com-member"><i class="fas fa-sign-out-alt"></i>로그아웃</a>
-			<a href="commypage?comnumber=${sessionScope.loginId}" class="com-member"><i class="far fa-user"></i>마이페이지</a>
+			<a href="comlogout" class="com-member"><i class="fas fa-sign-out-alt"></i> 로그아웃</a>
+			<a href="commypage?comnumber=${sessionScope.loginId}" class="com-member"><i class="far fa-user"></i> 마이페이지</a>
+			<a href="commemberpaylist" class="com-member"><i class="fas fa-archive"></i> 판매목록</a>
 		</div>
 	</nav>
 </body>

@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.army.choo.dto.AlarmDTO;
+import com.army.choo.dto.PayDTO;
 import com.army.choo.service.MainService;
 import com.google.gson.Gson;
 
@@ -24,6 +26,7 @@ public class MainController {
 	
 	@Autowired
 	private MainService main;
+	
 	
 	@RequestMapping(value="/commain", method=RequestMethod.GET)
 	public String index() {
@@ -72,13 +75,14 @@ public class MainController {
 	 */
 	
 	@RequestMapping(value="/kakaomap")
-	   public ModelAndView mapDistance() {
+	   public ModelAndView mapDistance(@RequestParam("mx") double mx, @RequestParam("my") double my, @RequestParam("cx") double cx,
+			   @RequestParam("cy") double cy, @RequestParam("paynumber") int paynumber) {
 	      double distance;
 	       double radius = 6371; // 지구 반지름(km)
-	       double x1 = 37.439515;
-	       double y1 =126.672805;
-	       double x2= 37.438785;
-	       double y2= 126.675055;
+	       double x1 = cx;
+	       double y1 = cy;
+	       double x2= mx;
+	       double y2= my;
 	       double toRadian = Math.PI / 180;
 
 	       double deltaLatitude = Math.abs(x1 - x2) * toRadian;
@@ -91,9 +95,31 @@ public class MainController {
 	           Math.cos(x1 * toRadian) * Math.cos(x2 * toRadian) * sinDeltaLng * sinDeltaLng);
 
 	       distance = 2 * radius * Math.asin(squareRoot);
+	       double hour = distance / 60;
+	       int hour1 = (int) Math.floor(hour);
+	       distance = distance - 60*hour1;
+	       System.out.println(distance);
+	       int distance1 = (int) Math.floor(distance);
+	      
 	       mav = new ModelAndView();
-	       mav.addObject("distance",distance);
-	       mav.setViewName("kakaomap");
+	       
+	       PayDTO pDTO = new PayDTO();
+	       AlarmDTO aDTO = new AlarmDTO();
+	       
+	       pDTO.setPaynumber(paynumber);
+	       pDTO.setTimes(distance1);
+	       pDTO.setHour(hour1);
+	       
+	       
+	       aDTO.setTimes(distance1);
+	       aDTO.setHour(hour1);
+	       aDTO.setPaynumber(paynumber);
+	       
+	       main.alarm(aDTO);
+	       main.Distance(pDTO);
+	       
+	       
+	       mav.setViewName("redirect:/commemberpaylist");
 	       return mav;
 	       
 	   }

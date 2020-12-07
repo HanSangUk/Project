@@ -151,9 +151,10 @@
     <select id="alarmCount" parameterType="String" resultType="int">
     	SELECT COUNT(AMID) FROM ALARM WHERE CONFIRM=0
     </select>
-    <select id="alarmList" parameterType="String" resultType="alarm">
-    	SELECT * FROM ALARM WHERE AMID=#{amid} ORDER BY ANUMBER DESC
+    <select id="alarmList" parameterType="page" resultType="alarm">
+    	SELECT * FROM (SELECT A.*, ROW_NUMBER() OVER(ORDER BY ANUMBER DESC) AS RN FROM ALARM A WHERE AMID=#{amid}) WHERE RN BETWEEN #{startrow} AND #{endrow}
     </select>
+    
     <select id="commemberpayList" parameterType="page" resultType="pay">
     	SELECT * FROM (SELECT P.*, ROW_NUMBER() OVER(ORDER BY PAYNUMBER DESC) AS RN FROM PAYMENT P WHERE PAYOFFICE=#{company}) WHERE RN BETWEEN #{startrow} AND #{endrow}
     </select>
@@ -169,6 +170,18 @@
     <update id="alarmConfirm">
     	UPDATE ALARM SET CONFIRM = 1 WHERE CONFIRM = 0
     </update>
+    <!-- 일반회원 좌표값 -->
+    <select id="memberCoordinates" parameterType="String" resultType="member">
+    	SELECT * FROM MEMBER WHERE MID=#{mid}
+    </select>
+    <!-- 기업회원 좌표값 -->
+    <select id="comCoordinates" parameterType="String" resultType="commember">
+    	SELECT * FROM COMMEMBER WHERE COMNUMBER = #{conumber}
+    </select>
+    <!--  -->
+    <select id="alarmlistCount" parameterType="String" resultType="int">
+    	SELECT COUNT(ANUMBER) FROM ALARM WHERE AMID=#{amid}
+    </select>
 </mapper>
  
  

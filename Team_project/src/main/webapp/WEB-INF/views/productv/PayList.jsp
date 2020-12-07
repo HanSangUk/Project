@@ -73,18 +73,22 @@ a.button {
 }
 .pagingnumber{
 	text-align:center;
+	font-size:20px;
 }
 .PayList{
 	display:block;
 	margin:auto;
 	text-align:center;
+	font-size:15px;
 }
 </style>
 </head>
 <body>
 <jsp:include page="../homeInclude.jsp" flush="false"/>
 <div class="PayList">
+<br>
 <c:forEach var="list" items="${payList}" varStatus="vs">
+<br>
        구매번호 : ${list.paynumber}<br>    
        카테고리 : ${list.paycategory}<br>
         상품명 : <a href ="productview?pnumber=${list.payproduct}&pcategory=1">${list.payname}</a><br>
@@ -95,6 +99,7 @@ a.button {
        배송현황 : ${list.payagree}<br>
    <c:if test="${list.payagree eq '배송중'}">
    <div id="wrap">
+	배송시간 : ${list.hour}시 ${list.times}분<br>
       <a href="productagree?paynumber=${list.paynumber}&page=${paging.page}" class="button modal-open">배송완료</a>
    </div>
    </c:if>
@@ -133,7 +138,7 @@ a.button {
    <c:if test="${list.reviewagree eq '1'}">
    <h1>리뷰 작성 완료!</h1>
    </c:if>
-            </c:if><br>
+   </c:if>
 ============================================<br>
 
 </c:forEach>

@@ -6,6 +6,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.army.choo.dto.AlarmDTO;
 import com.army.choo.dto.KakaoPayApprovalVO;
 import com.army.choo.dto.PayDTO;
 import com.army.choo.dto.ProductDTO;
@@ -237,4 +238,14 @@ public class PayDAO {
 		sql.insert("Pay.alarmInsert",kvalue);
 		
 	}
+
+	public void distance(PayDTO pDTO) {
+		sql.update("Pay.Distance", pDTO);
+	}
+
+	public void alarmupdate(AlarmDTO aDTO) {
+		sql.update("Pay.alarmUpdate", aDTO);
+	}
+
+	
 }
